@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>मृदा-चक्षु | Mrida-Chakshu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col items-center justify-start p-4">
+
+  <div id="pageLanguage" class="w-full max-w-md my-auto flex flex-col items-center text-center space-y-6">
+    <div class="w-20 h-20 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-4xl shadow-lg shadow-emerald-900/30">
+      <i class="fa-solid fa-seedling"></i>
+    </div>
+    <div>
+      <h1 class="text-2xl font-bold text-white tracking-wide">मृदा-चक्षु | Mrida-Chakshu</h1>
+      <p class="text-xs text-slate-400 mt-1">Smart Soil & Crop Health Monitor</p>
+    </div>
+    <p class="text-sm text-slate-300 font-medium">कृपया अपनी भाषा चुनें / कृपया भाषा निवडा / Choose Language</p>
+    
+    <div class="w-full space-y-3">
+      <button onclick="setLanguage('en')" class="w-full py-3.5 px-4 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl font-semibold flex items-center justify-between transition">
+        <span>English</span> <i class="fa-solid fa-chevron-right text-slate-500 text-xs"></i>
+      </button>
+      <button onclick="setLanguage('mr')" class="w-full py-3.5 px-4 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl font-semibold flex items-center justify-between transition">
+        <span>मराठी</span> <i class="fa-solid fa-chevron-right text-slate-500 text-xs"></i>
+      </button>
+      <button onclick="setLanguage('hi')" class="w-full py-3.5 px-4 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl font-semibold flex items-center justify-between transition">
+        <span>हिंदी</span> <i class="fa-solid fa-chevron-right text-slate-500 text-xs"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="pageMenu" class="w-full max-w-md hidden space-y-6">
+    <header class="flex justify-between items-center pb-3 border-b border-slate-800">
+      <div>
+        <h2 id="menuTitle" class="text-lg font-bold text-emerald-400 flex items-center gap-2">
+          <i class="fa-solid fa-leaf"></i> मृदा-चक्षु
+        </h2>
+        <p id="menuSubtitle" class="text-xs text-slate-400">मुख्य पृष्ठ</p>
+      </div>
+      <button onclick="goBackToLanguage()" class="text-xs bg-slate-900 border border-slate-700 px-2.5 py-1 rounded text-slate-300">
+        <i class="fa-solid fa-language mr-1"></i> <span id="changeLangBtn">भाषा</span>
+      </button>
+    </header>
+
+    <div class="space-y-4">
+      <div onclick="showSection('sectionDevice')" class="cursor-pointer bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 p-5 rounded-2xl flex items-center gap-4 transition shadow">
+        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl">
+          <i class="fa-brands fa-bluetooth-b"></i>
+        </div>
+        <div>
+          <h3 id="btnFindDevice" class="font-bold text-white text-base">डिवाइस को ढूंढें</h3>
+          <p id="descFindDevice" class="text-xs text-slate-400 mt-0.5">ब्लूटूथ से टेस्ट रिपोर्ट और लाइव डेटा देखें</p>
+        </div>
+      </div>
+
+      <div onclick="showSection('sectionCrops')" class="cursor-pointer bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 p-5 rounded-2xl flex items-center gap-4 transition shadow">
+        <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-wheat-awn"></i>
+        </div>
+        <div>
+          <h3 id="btnCropInfo" class="font-bold text-white text-base">फसलों की जानकारी</h3>
+          <p id="descCropInfo" class="text-xs text-slate-400 mt-0.5">pH, तापमान, नमी और सही खाद की पूरी सूची</p>
+        </div>
+      </div>
+
+      <div onclick="showSection('sectionAI')" class="cursor-pointer bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 p-5 rounded-2xl flex items-center gap-4 transition shadow">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 text-lime-400 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <div>
+          <h3 id="btnAiDoc" class="font-bold text-white text-base">फसल रोग निदान (AI)</h3>
+          <p id="descAiDoc" class="text-xs text-slate-400 mt-0.5">पत्तों का फोटो अपलोड कर जेमिनी से इलाज जानें</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sectionDevice" class="w-full max-w-md hidden space-y-4">
+    <button onclick="goBackToMenu()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 mb-1">
+      <i class="fa-solid fa-arrow-left"></i> <span class="lblBack">पीछे जाएं</span>
+    </button>
+
+    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl text-center space-y-3">
+      <button id="btScanBtn" onclick="connectBluetooth()" class="w-full py-3 bg-cyan-600 hover:bg-cyan-500 font-bold rounded-xl text-slate-950 flex items-center justify-center gap-2 transition">
+        <i class="fa-solid fa-magnifying-glass"></i> <span id="txtSearchBtn">सर्च फॉर डिवाइस</span>
+      </button>
+      <p id="btStatus" class="text-xs text-slate-400">डिवाइस पास रखें और चालू रखें</p>
+    </div>
+
+    <div class="grid grid-cols-3 gap-2 text-center">
+      <div class="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+        <span class="text-xs text-slate-400" id="lblMoist">नमी</span>
+        <div class="text-xl font-bold text-cyan-400 mt-1"><span id="valMoist">45</span>%</div>
+      </div>
+      <div class="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+        <span class="text-xs text-slate-400" id="lblPh">pH मान</span>
+        <div class="text-xl font-bold text-amber-400 mt-1"><span id="valPh">6.8</span></div>
+      </div>
+      <div class="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+        <span class="text-xs text-slate-400" id="lblTemp">तापमान</span>
+        <div class="text-xl font-bold text-orange-400 mt-1"><span id="valTemp">28</span>°C</div>
+      </div>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-3">
+      <div class="flex items-center justify-between">
+        <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider" id="lblReportTitle">लास्ट सॉइल टेस्ट रिपोर्ट व सलाह</h4>
+        <button onclick="speakCurrentReport()" class="p-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-slate-950 flex items-center gap-1.5 text-xs font-bold">
+          <i class="fa-solid fa-volume-high"></i> <span id="btnSpeak">सुनें</span>
+        </button>
+      </div>
+      <p id="reportVoiceText" class="text-xs text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800">
+        लास्ट सॉइल टेस्ट के अनुसार मिट्टी में नमी 45 प्रतिशत है। pH मान 6.8 है जो सामान्य है। यूरिया की मात्रा कम रखें और पोटाश खाद का प्रयोग करें।
+      </p>
+    </div>
+  </div>
+
+  <div id="sectionCrops" class="w-full max-w-md hidden space-y-4">
+    <button onclick="goBackToMenu()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 mb-1">
+      <i class="fa-solid fa-arrow-left"></i> <span class="lblBack">पीछे जाएं</span>
+    </button>
+    <h3 class="text-base font-bold text-amber-400" id="cropGuideTitle">प्रमुख भारतीय फसलें व आदर्श स्थिति</h3>
+
+    <div class="space-y-3 text-xs" id="cropsList">
+      <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl space-y-1.5">
+        <div class="flex justify-between font-bold text-sm text-white">
+          <span class="crop-sugarcane">ऊस (गन्ना / Sugarcane)</span>
+          <span class="text-emerald-400">pH 6.5 - 7.5</span>
+        </div>
+        <div class="text-slate-400"><strong>तापमान:</strong> 25°C - 35°C | <strong>नमी:</strong> 50% - 70%</div>
+        <div class="text-slate-300"><strong>खाद:</strong> N:P:K (250:115:115 kg/ha), शेणखत / कंपोस्ट आणि झिंक सल्फेट.</div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl space-y-1.5">
+        <div class="flex justify-between font-bold text-sm text-white">
+          <span class="crop-wheat">गहू (गेहूं / Wheat)</span>
+          <span class="text-emerald-400">pH 6.0 - 7.5</span>
+        </div>
+        <div class="text-slate-400"><strong>तापमान:</strong> 15°C - 24°C | <strong>नमी:</strong> 40% - 60%</div>
+        <div class="text-slate-300"><strong>खाद:</strong> N:P:K (120:60:40 kg/ha), यूरिया आणि डीएपी (DAP).</div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl space-y-1.5">
+        <div class="flex justify-between font-bold text-sm text-white">
+          <span class="crop-cotton">कापूस (कपास / Cotton)</span>
+          <span class="text-emerald-400">pH 6.0 - 8.0</span>
+        </div>
+        <div class="text-slate-400"><strong>तापमान:</strong> 21°C - 30°C | <strong>नमी:</strong> 40% - 50%</div>
+        <div class="text-slate-300"><strong>खाद:</strong> नत्र, स्फुरद, पालाश (100:50:50) व सूक्ष्म पोषक घटक.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sectionAI" class="w-full max-w-md hidden space-y-4">
+    <button onclick="goBackToMenu()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 mb-1">
+      <i class="fa-solid fa-arrow-left"></i> <span class="lblBack">पीछे जाएं</span>
+    </button>
+    <h3 class="text-base font-bold text-lime-400" id="aiDiagTitle">Gemini AI रोग निदान</h3>
+
+    <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl space-y-1.5">
+      <label class="text-xs text-slate-400">Gemini API Key (फ्री Google AI Studio Key):</label>
+      <input type="password" id="geminiApiKey" placeholder="Paste Gemini API Key here..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-lime-400">
+    </div>
+
+    <div onclick="document.getElementById('leafInput').click()" class="border-2 border-dashed border-slate-700 hover:border-lime-500 rounded-2xl p-6 text-center cursor-pointer bg-slate-900/50 space-y-2 transition">
+      <input type="file" id="leafInput" accept="image/*" class="hidden" onchange="handleImage(event)">
+      <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-400"></i>
+      <p class="text-xs text-slate-300 font-medium" id="txtUpload">पत्ते या फसल का फोटो चुनें या कैमरे से लें</p>
+    </div>
+
+    <img id="leafPreview" class="hidden w-full h-48 object-cover rounded-xl border border-slate-700 shadow" />
+
+    <button id="btnDiagnose" onclick="diagnoseCropWithGemini()" class="w-full py-3 bg-lime-500 hover:bg-lime-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition">
+      <i class="fa-solid fa-microscope"></i> <span id="txtDiagnoseBtn">बीमारी की जांच करें</span>
+    </button>
+
+    <div id="aiResponseCard" class="hidden bg-slate-900 border border-slate-800 p-4 rounded-xl text-xs space-y-2">
+      <div class="font-bold text-lime-400 flex items-center gap-1.5">
+        <i class="fa-solid fa-robot"></i> <span id="lblDiagnosis">जांच रिपोर्ट व इलाज:</span>
+      </div>
+      <p id="aiOutputText" class="text-slate-300 leading-relaxed whitespace-pre-line"></p>
+    </div>
+  </div>
+
+  <script>
+    let currentLang = 'hi';
+    let base64Image = null;
+
+    const langData = {
+      en: {
+        menuTitle: "Mrida-Chakshu",
+        menuSubtitle: "Main Menu",
+        changeLang: "Lang",
+        btnFindDevice: "Find Device",
+        descFindDevice: "Connect via Bluetooth for live test reports",
+        btnCropInfo: "Crop Information",
+        descCropInfo: "pH, temp, moisture & fertilizer requirements",
+        btnAiDoc: "Crop Disease Diagnosis (AI)",
+        descAiDoc: "Upload leaf photo to diagnose with Gemini",
+        lblBack: "Back",
+        txtSearchBtn: "Search For Device",
+        btStatus: "Keep device close and powered on",
+        lblMoist: "Moisture",
+        lblPh: "pH Level",
+        lblTemp: "Temp",
+        lblReportTitle: "Last Soil Test Report & Advice",
+        btnSpeak: "Listen",
+        reportText: "As per last soil test: Moisture is 45%. pH is 6.8 which is normal. Keep urea minimal and use potash fertilizer.",
+        cropGuideTitle: "Indian Crops & Optimal Conditions",
+        aiDiagTitle: "Gemini AI Disease Diagnosis",
+        txtUpload: "Upload or take photo of crop leaf",
+        txtDiagnoseBtn: "Diagnose Disease",
+        lblDiagnosis: "Diagnostic Report & Treatment:"
+      },
+      mr: {
+        menuTitle: "मृदा-चक्षु",
+        menuSubtitle: "मुख्य मेनू",
+        changeLang: "भाषा बदला",
+        btnFindDevice: "डिव्हाइस शोधा (Find Device)",
+        descFindDevice: "ब्लूटूथ द्वारे लाईव्ह टेस्ट रिपोर्ट व डेटा तपासा",
+        btnCropInfo: "विविध पिकांची माहिती",
+        descCropInfo: "pH, तापमान, ओलावा आणि खतांची संपूर्ण माहिती",
+        btnAiDoc: "पीक रोग निदान (AI)",
+        descAiDoc: "पानाचा फोटो अपलोड करून Gemini द्वारे रोग ओळखा",
+        lblBack: "मागे जा",
+        txtSearchBtn: "डिव्हाइस शोधा (Search)",
+        btStatus: "डिव्हाइस जवळ ठेवा आणि सुरू करा",
+        lblMoist: "ओलावा",
+        lblPh: "सामू (pH)",
+        lblTemp: "तापमान",
+        lblReportTitle: "शेवटचा सॉइल टेस्ट रिपोर्ट व सल्ला",
+        btnSpeak: "ऐका",
+        reportText: "शेवटच्या सॉइल टेस्टनुसार मातीतील ओलावा ४५ टक्के आहे. pH ६.८ असून तो योग्य आहे. युरियाचे प्रमाण कमी ठेवून पोटॅश खताचा वापर करा.",
+        cropGuideTitle: "प्रमुख भारतीय पिके आणि योग्य स्थिती",
+        aiDiagTitle: "Gemini AI पीक रोग निदान",
+        txtUpload: "पानाचा फोटो अपलोड करा किंवा थेट कॅमेऱ्याने काढा",
+        txtDiagnoseBtn: "रोगाची तपासणी करा",
+        lblDiagnosis: "रोग निदान व उपाय योजना:"
+      },
+      hi: {
+        menuTitle: "मृदा-चक्षु",
+        menuSubtitle: "मुख्य मेन्यू",
+        changeLang: "भाषा बदलें",
+        btnFindDevice: "डिवाइस को ढूंढें (Find Device)",
+        descFindDevice: "ब्लूटूथ से टेस्ट रिपोर्ट और लाइव डेटा देखें",
+        btnCropInfo: "अलग-अलग फसलों की जानकारी",
+        descCropInfo: "pH, तापमान, नमी और सही खाद की पूरी सूची",
+        btnAiDoc: "बीमारियों के बारे में जानें (AI)",
+        descAiDoc: "पत्तों का फोटो डालकर Gemini से बीमारी जानें",
+        lblBack: "पीछे जाएं",
+        txtSearchBtn: "सर्च फॉर डिवाइस",
+        btStatus: "डिवाइस पास रखें और चालू रखें",
+        lblMoist: "नमी",
+        lblPh: "pH मान",
+        lblTemp: "तापमान",
+        lblReportTitle: "लास्ट सॉइल टेस्ट रिपोर्ट व सलाह",
+        btnSpeak: "सुनें",
+        reportText: "लास्ट सॉइल टेस्ट के अनुसार मिट्टी में नमी 45 प्रतिशत है। pH मान 6.8 है जो सामान्य है। यूरिया की मात्रा कम रखें और पोटाश खाद का प्रयोग करें।",
+        cropGuideTitle: "प्रमुख भारतीय फसलें व आदर्श स्थिति",
+        aiDiagTitle: "Gemini AI रोग निदान",
+        txtUpload: "पत्ते या फसल का फोटो चुनें या कैमरे से लें",
+        txtDiagnoseBtn: "बीमारी की जांच करें",
+        lblDiagnosis: "जांच रिपोर्ट व इलाज:"
+      }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const d = langData[lang];
+
+      document.getElementById('menuTitle').innerHTML = `<i class="fa-solid fa-leaf"></i> ${d.menuTitle}`;
+      document.getElementById('menuSubtitle').innerText = d.menuSubtitle;
+      document.getElementById('changeLangBtn').innerText = d.changeLang;
+      document.getElementById('btnFindDevice').innerText = d.btnFindDevice;
+      document.getElementById('descFindDevice').innerText = d.descFindDevice;
+      document.getElementById('btnCropInfo').innerText = d.btnCropInfo;
+      document.getElementById('descCropInfo').innerText = d.descCropInfo;
+      document.getElementById('btnAiDoc').innerText = d.btnAiDoc;
+      document.getElementById('descAiDoc').innerText = d.descAiDoc;
+
+      document.querySelectorAll('.lblBack').forEach(el => el.innerText = d.lblBack);
+      document.getElementById('txtSearchBtn').innerText = d.txtSearchBtn;
+      document.getElementById('btStatus').innerText = d.btStatus;
+      document.getElementById('lblMoist').innerText = d.lblMoist;
+      document.getElementById('lblPh').innerText = d.lblPh;
+      document.getElementById('lblTemp').innerText = d.lblTemp;
+      document.getElementById('lblReportTitle').innerText = d.lblReportTitle;
+      document.getElementById('btnSpeak').innerText = d.btnSpeak;
+      document.getElementById('reportVoiceText').innerText = d.reportText;
+
+      document.getElementById('cropGuideTitle').innerText = d.cropGuideTitle;
+      document.getElementById('aiDiagTitle').innerText = d.aiDiagTitle;
+      document.getElementById('txtUpload').innerText = d.txtUpload;
+      document.getElementById('txtDiagnoseBtn').innerText = d.txtDiagnoseBtn;
+      document.getElementById('lblDiagnosis').innerText = d.lblDiagnosis;
+
+      document.getElementById('pageLanguage').classList.add('hidden');
+      document.getElementById('pageMenu').classList.remove('hidden');
+    }
+
+    function goBackToLanguage() {
+      document.getElementById('pageMenu').classList.add('hidden');
+      document.getElementById('pageLanguage').classList.remove('hidden');
+    }
+
+    function showSection(sectionId) {
+      document.getElementById('pageMenu').classList.add('hidden');
+      document.getElementById(sectionId).classList.remove('hidden');
+    }
+
+    function goBackToMenu() {
+      document.getElementById('sectionDevice').classList.add('hidden');
+      document.getElementById('sectionCrops').classList.add('hidden');
+      document.getElementById('sectionAI').classList.add('hidden');
+      document.getElementById('pageMenu').classList.remove('hidden');
+    }
+
+    // Bluetooth Connect (Web Serial / Web Bluetooth Simulation)
+    async function connectBluetooth() {
+      const btn = document.getElementById('txtSearchBtn');
+      const status = document.getElementById('btStatus');
+      btn.innerText = "...Searching...";
+      
+      try {
+        if ('serial' in navigator) {
+          const port = await navigator.serial.requestPort();
+          await port.open({ baudRate: 9600 });
+          btn.innerText = "Connected ✅";
+          status.innerText = "मृदा-चक्षु हार्डवेयर कनेक्टेड";
+        } else {
+          // सिमुलेशन एक्जीबिशन डेमो के लिए
+          setTimeout(() => {
+            btn.innerText = "Connected ✅ (Demo Mode)";
+            status.innerText = "मृदा-चक्षु डिवाइस कनेक्ट हो गया है!";
+            speakCurrentReport();
+          }, 1200);
+        }
+      } catch (e) {
+        setTimeout(() => {
+          btn.innerText = "Connected ✅ (Demo Mode)";
+          status.innerText = "मृदा-चक्षु डिवाइस कनेक्ट हो गया है!";
+          speakCurrentReport();
+        }, 1200);
+      }
+    }
+
+    // Text To Speech (स्पीकर में बोलकर बताना)
+    function speakCurrentReport() {
+      const text = document.getElementById('reportVoiceText').innerText;
+      const utterance = new SpeechSynthesisUtterance(text);
+      if (currentLang === 'mr') utterance.lang = 'mr-IN';
+      else if (currentLang === 'hi') utterance.lang = 'hi-IN';
+      else utterance.lang = 'en-US';
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Image Upload Handler
+    function handleImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        base64Image = e.target.result.split(',')[1];
+        const preview = document.getElementById('leafPreview');
+        preview.src = e.target.result;
+        preview.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Gemini API Call
+    async function diagnoseCropWithGemini() {
+      const apiKey = document.getElementById('geminiApiKey').value.trim();
+      const outputBox = document.getElementById('aiResponseCard');
+      const outputText = document.getElementById('aiOutputText');
+
+      if (!base64Image) {
+        alert("कृपया पहले पौधे के पत्ते का फोटो अपलोड करें!");
+        return;
+      }
+
+      outputBox.classList.remove('hidden');
+      outputText.innerText = "Gemini AI फोटो का विश्लेषण कर रहा है, कृपया प्रतीक्षा करें...";
+
+      if (!apiKey) {
+        // ऑफलाइन या बिना API Key डेमो के लिए
+        setTimeout(() => {
+          if (currentLang === 'mr') {
+            outputText.innerText = "रोग: उसावरील तांबेरा (Rust Disease)\nलक्षणे: पानांवर लांबट तांबूस रंगाचे ठिपके पडले आहेत.\nउपाय: मँकोझेब किंवा प्रोपिकोनेझोल बुरशीनाशकाची २ ग्रॅम प्रति लिटर पाण्यात फवारणी करा.";
+          } else if (currentLang === 'en') {
+            outputText.innerText = "Disease: Leaf Rust Detected\nSymptoms: Reddish-brown pustules on the leaf surface.\nRemedy: Spray Mancozeb or Propiconazole @ 2g/liter of water immediately.";
+          } else {
+            outputText.innerText = "रोग: गन्ने का रतुआ रोग (Rust Disease)\nलक्षण: पत्तियों पर लाल-भूरे रंग के धब्बे दिख रहे हैं।\nउपाय: मैंकोजेब 75 WP (2 ग्राम प्रति लीटर) फफूंदनाशक का तुरंत छिड़काव करें।";
+          }
+        }, 1500);
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [
+                { text: `Identify the crop disease from this image and provide symptoms and treatment. Respond strictly in ${currentLang === 'mr' ? 'Marathi' : currentLang === 'hi' ? 'Hindi' : 'English'} language in 3 bullet points.` },
+                { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+              ]
+            }]
+          })
+        });
+        const data = await response.json();
+        const reply = data.candidates[0].content.parts[0].text;
+        outputText.innerText = reply;
+      } catch (err) {
+        outputText.innerText = "Gemini API कॉल एरर: कृपया API Key जांचें या इंटरनेट कनेक्शन देखें।";
+      }
+    }
+  </script>
+</body>
+</html>
