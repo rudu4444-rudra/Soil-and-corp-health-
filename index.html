@@ -422,3 +422,119 @@
   </script>
 </body>
 </html>
+<div id="deviceDataContainer" class="hidden space-y-4">
+  
+  <div class="grid grid-cols-3 gap-2 text-center">
+    <div class="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+      <span class="text-xs text-slate-400" id="lblMoist">नमी</span>
+      <div class="text-xl font-bold text-cyan-400 mt-1"><span id="valMoist">45</span>%</div>
+    </div>
+    <div class="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+      <span class="text-xs text-slate-400" id="lblPh">pH मान</span>
+      <div class="text-xl font-bold text-amber-400 mt-1"><span id="valPh">6.8</span></div>
+    </div>
+    <div class="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+      <span class="text-xs text-slate-400" id="lblTemp">तापमान</span>
+      <div class="text-xl font-bold text-orange-400 mt-1"><span id="valTemp">28</span>°C</div>
+    </div>
+  </div>
+
+  <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-3">
+    <div class="flex items-center justify-between">
+      <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider" id="lblReportTitle">लास्ट सॉइल टेस्ट रिपोर्ट व सलाह</h4>
+      <button onclick="speakCurrentReport()" class="p-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-slate-950 flex items-center gap-1.5 text-xs font-bold">
+        <i class="fa-solid fa-volume-high"></i> <span id="btnSpeak">सुनें</span>
+      </button>
+    </div>
+    <p id="reportVoiceText" class="text-xs text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800">
+      लास्ट सॉइल टेस्ट के अनुसार मिट्टी में नमी 45 प्रतिशत है। pH मान 6.8 है जो सामान्य है। यूरिया की मात्रा कम रखें और पोटाश खाद का प्रयोग करें।
+    </p>
+  </div>
+
+</div>
+async function connectBluetooth() {
+  const btn = document.getElementById('txtSearchBtn');
+  const status = document.getElementById('btStatus');
+  const dataContainer = document.getElementById('deviceDataContainer');
+
+  btn.innerText = "...Searching...";
+  
+  try {
+    if ('serial' in navigator) {
+      const port = await navigator.serial.requestPort();
+      await port.open({ baudRate: 9600 });
+      btn.innerText = "Connected ✅";
+      status.innerText = "मृदा-चक्षु हार्डवेयर कनेक्टेड";
+      
+      // कनेक्ट होते ही डेटा शो करें
+      dataContainer.classList.remove('hidden');
+    } else {
+      // डेमो मोड
+      setTimeout(() => {
+        btn.innerText = "Connected ✅ (Demo Mode)";
+        status.innerText = "मृदा-चक्षु डिवाइस कनेक्ट हो गया है!";
+        dataContainer.classList.remove('hidden'); // कार्ड्स दिखाएं
+        speakCurrentReport();
+      }, 1200);
+    }
+  } catch (e) {
+    setTimeout(() => {
+      btn.innerText = "Connected ✅ (Demo Mode)";
+      status.innerText = "मृदा-चक्षु डिवाइस कनेक्ट हो गया है!";
+      dataContainer.classList.remove('hidden'); // कार्ड्स दिखाएं
+      speakCurrentReport();
+    }, 1200);
+  }async function diagnoseCropWithGemini() {
+  const apiKey = document.getElementById('geminiApiKey').value.trim();
+  const outputBox = document.getElementById('aiResponseCard');
+  const outputText = document.getElementById('aiOutputText');
+
+  if (!apiKey) {
+    alert("कृपया आधी वरील बॉक्समध्ये तुमची Gemini API Key टाका!");
+    return;
+  }
+
+  if (!base64Image) {
+    alert("कृपया आधी पानाचा फोटो अपलोड करा!");
+    return;
+  }
+
+  outputBox.classList.remove('hidden');
+  outputText.innerText = "Gemini AI फोटो तपासत आहे, कृपया थांबा...";
+
+  const promptText = `Analyze this image carefully. 
+First, verify if this image contains a real agricultural crop, plant, leaf, or farm soil. 
+If it is NOT a plant/leaf/crop (for example: a mobile screenshot, code, human face, vehicle, or random object), strictly reject it by saying: 'त्रुटी: हा फोटो शेतीतील पीक किंवा पानाचा नाही. कृपया पिकाच्या पानाचा स्पष्ट फोटो टाका.' in ${currentLang === 'mr' ? 'Marathi' : currentLang === 'hi' ? 'Hindi' : 'English'}.
+If it IS a plant or leaf:
+1. Identify the crop name.
+2. Identify the disease or issue (or state if healthy).
+3. Recommend remedies and fertilizers.
+Respond strictly in ${currentLang === 'mr' ? 'Marathi' : currentLang === 'hi' ? 'Hindi' : 'English'}.`;
+
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [
+            { text: promptText },
+            { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+          ]
+        }]
+      })
+    });
+
+    const data = await response.json();
+    if (data.candidates && data.candidates[0].content.parts[0].text) {
+      outputText.innerText = data.candidates[0].content.parts[0].text;
+    } else {
+      outputText.innerText = "प्रतिसाद मिळाला नाही. API Key योग्य आहे का ते तपासा.";
+    }
+  } catch (err) {
+    outputText.innerText = "इंटरनेट किंवा API एरर आला आहे: " + err.message;
+  }
+}
+
+
+}
